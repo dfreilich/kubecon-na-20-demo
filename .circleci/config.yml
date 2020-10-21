@@ -1,12 +1,21 @@
 version: 2.1
 orbs:
   pack: buildpacks/pack@0.2.0
+executors:
+  # pack-exec:
+  #   docker:
+  #     - image: circleci/ruby:2.5.1-node-browsers
+  #       auth:
+  #         username: dfreilich
+  #         password: $DOCKERHUB_PASSWORD  # context / project UI env-var reference
 workflows:
   main:
     jobs:
       - pack/build:
+          # image-name: dfreilich/hello-buildpacks:circle-ci
           image-name: hello-buildpacks
           builder: 'paketobuildpacks/builder:tiny'
+          working_directory: 'app/'
       - test:
           requires:
             - pack/build
