@@ -20,4 +20,5 @@ jobs:
           command: |
             docker load -i /tmp/workspace/images/image.tgz
             docker run -d -p 8080:8080 hello-buildpacks
+            sleep 10
             curl localhost:8080/
