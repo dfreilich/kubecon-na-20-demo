@@ -1,0 +1,23 @@
+version: 2.1
+orbs:
+  pack: buildpacks/pack@0.2.0
+workflows:
+  main:
+    jobs:
+      - pack/build:
+          image-name: hello-buildpacks
+          builder: 'paketobuildpacks/builder:tiny'
+      - test:
+          requires:
+            - pack/build
+jobs:
+  test:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          command: |
+            docker load -i /tmp/workspace/images/image.tgz
+            docker run -d -p 8080:8080 hello-buildpacks
+            curl localhost:8080/
