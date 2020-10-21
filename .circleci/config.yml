@@ -7,8 +7,6 @@ workflows:
       - pack/build:
           image-name: hello-buildpacks
           builder: 'paketobuildpacks/builder:tiny'
-          requires:
-            - setup
       - test:
           requires:
             - pack/build
