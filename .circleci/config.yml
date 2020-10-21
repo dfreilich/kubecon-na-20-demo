@@ -7,17 +7,17 @@ workflows:
       - pack/build:
           image-name: hello-buildpacks
           builder: 'paketobuildpacks/builder:base'
-      - test:
-          requires:
-            - pack/build
-jobs:
-  test:
-    machine: true
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          command: |
-            docker load -i /tmp/workspace/images/image.tgz
-            docker run -d -p 8080:8080 hello-buildpacks
-            curl -k localhost:8080
+#       - test:
+#           requires:
+#             - pack/build
+# jobs:
+#   test:
+#     machine: true
+#     steps:
+#       - attach_workspace:
+#           at: /tmp/workspace
+#       - run:
+#           command: |
+#             docker load -i /tmp/workspace/images/image.tgz
+#             docker run -d -p 8080:8080 hello-buildpacks
+#             curl -k localhost:8080
