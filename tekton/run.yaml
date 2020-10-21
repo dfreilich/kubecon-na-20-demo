@@ -1,0 +1,75 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: buildpacks-app-image
+spec:
+  type: image
+  params:
+    - name: url
+      value: index.docker.io/dfreilich/hello-buildpacks:kubecon20
+---
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: buildpacks-test-pipeline
+spec:
+  workspaces:
+  - name: shared-workspace
+  resources:
+  - name: build-image
+    type: image
+  tasks:
+  - name: fetch-repository
+    taskRef:
+      name: git-clone
+    workspaces:
+    - name: output
+      workspace: shared-workspace
+    params:
+    - name: url
+      value: https://github.com/dfreilich/kubecon-na-20-demo
+    - name: subdirectory
+      value: ""
+    - name: deleteExisting
+      value: "true"
+  - name: buildpacks
+    taskRef:
+      name: buildpacks
+    runAfter:
+    - fetch-repository
+    workspaces:
+    - name: source
+      workspace: shared-workspace
+    params:
+    - name: SOURCE_SUBPATH
+      value: app/
+    - name: BUILDER_IMAGE
+      value: paketobuildpacks/builder:base
+    - name: CACHE
+      value: buildpacks-cache
+    resources:
+      outputs:
+      - name: image
+        resource: build-image
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: buildpacks-test-pipeline-run
+spec:
+  serviceAccountName: buildpacks-service-account
+  pipelineRef:
+    name: buildpacks-test-pipeline
+  workspaces:
+  - name: shared-workspace
+    persistentvolumeclaim:
+      claimName: buildpacks-source-pvc
+  resources:
+  - name: build-image
+    resourceRef:
+      name: buildpacks-app-image
+  podTemplate:
+    volumes:
+    - name: buildpacks-cache
+      persistentVolumeClaim:
+        claimName: buildpacks-cache-pvc

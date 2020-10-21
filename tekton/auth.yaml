@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Secret
+metadata:
+    name: basic-user-pass
+    annotations:
+    tekton.dev/docker-0: https://index.docker.io/v1/
+type: kubernetes.io/basic-auth
+stringData:
+    username: <USERNAME>
+    password: <PWD>
+---
+# Generated a docker regcred secret using:
+# kubectl create secret generic regcred     --from-file=.dockerconfigjson=$HOME/.docker/config.json     --type=kubernetes.io/dockerconfigjson
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+    name: buildpacks-service-account
+secrets:
+    - name: regcred
+    - name: basic-user-pass
