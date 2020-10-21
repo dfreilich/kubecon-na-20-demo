@@ -6,7 +6,7 @@ workflows:
     jobs:
       - pack/build:
           image-name: hello-buildpacks
-          builder: 'paketobuildpacks/builder:tiny'
+          builder: 'paketobuildpacks/builder:base'
       - test:
           requires:
             - pack/build
