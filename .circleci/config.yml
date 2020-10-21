@@ -4,7 +4,6 @@ orbs:
 workflows:
   main:
     jobs:
-      - setup
       - pack/build:
           image-name: hello-buildpacks
           builder: 'paketobuildpacks/builder:tiny'
@@ -14,14 +13,6 @@ workflows:
           requires:
             - pack/build
 jobs:
-  setup:
-    machine: true
-    steps:
-      - attach_workspace:
-          at: /tmp/workspace
-      - run:
-          command: |
-            cp -r /tmp/workspace/app /tmp/workspace
   test:
     machine: true
     steps:
