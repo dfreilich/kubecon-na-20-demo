@@ -1,0 +1,28 @@
+version: 2.1
+orbs:
+  pack: buildpacks/pack@dev:1dcd173
+workflows:
+  main:
+    jobs:
+      - pack/build:
+          working-directory: app
+          image-name: buildpacksiodev/hello-circleci
+          builder: 'paketobuildpacks/builder:base'
+      - test-and-publish:
+          requires:
+            - pack/build
+jobs:
+  test-and-publish:
+    machine: true
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - run:
+          command: |
+            docker load -i /tmp/workspace/images/image.tgz
+            docker run -d -p 8080:8080 buildpacksiodev/hello-circleci
+            sleep 40
+            curl -k localhost:8080
+
+            echo "$DOCKERHUB_PASS" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+            docker push buildpacksiodev/hello-circleci

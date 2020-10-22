@@ -1,13 +1,3 @@
-apiVersion: tekton.dev/v1alpha1
-kind: PipelineResource
-metadata:
-  name: buildpacks-app-image
-spec:
-  type: image
-  params:
-    - name: url
-      value: index.docker.io/dfreilich/hello-buildpacks:kubecon20
----
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
@@ -55,7 +45,7 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: PipelineRun
 metadata:
-  name: buildpacks-test-pipeline-run
+  name: buildpacks-test-pipeline-run5
 spec:
   serviceAccountName: buildpacks-service-account
   pipelineRef:
