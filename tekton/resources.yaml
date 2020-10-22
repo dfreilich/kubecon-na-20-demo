@@ -6,7 +6,7 @@ spec:
   type: image
   params:
     - name: url
-      value: index.docker.io/dfreilich/hello-buildpacks:kubecon20
+      value: buildpacksiodev/hello-tekton
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

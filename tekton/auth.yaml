@@ -3,11 +3,11 @@ kind: Secret
 metadata:
     name: basic-user-pass
     annotations:
-    tekton.dev/docker-0: https://index.docker.io/v1/
+        tekton.dev/docker-0: https://index.docker.io/v1/
 type: kubernetes.io/basic-auth
 stringData:
-    username: <USERNAME>
-    password: <PWD>
+    username: buildpacksiodev
+    password: 5e445f69-7c26-43b5-8afa-097c9b1860db
 ---
 # Generated a docker regcred secret using:
 # kubectl create secret generic regcred     --from-file=.dockerconfigjson=$HOME/.docker/config.json     --type=kubernetes.io/dockerconfigjson
